@@ -2,15 +2,13 @@ package com.external.liba;
 
 import com.external.liba.dao.LegacyAS400Dao;
 import com.external.liba.service.LegacyAS400Service;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,8 +18,7 @@ import java.util.List;
  * 外部 JAR A 的 Spring 整合測試
  * 透過 Spring 讀取 applicationContext-liba.xml，將所有 Bean 註冊並委派給 Spring 容器管理與注入
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationContext-liba.xml"})
+@SpringJUnitConfig(locations = "classpath:applicationContext-liba.xml")
 public class LegacyAS400ServiceTest {
 
     @Resource
@@ -35,11 +32,11 @@ public class LegacyAS400ServiceTest {
 
     @Test
     public void testSpringContextLoaded() {
-        Assert.assertNotNull("Spring ApplicationContext 必須成功載入", applicationContext);
-        Assert.assertNotNull("Spring 必須透過 component-scan 成功建立並注入 LegacyAS400Service", service);
-        Assert.assertNotNull("Spring 必須透過 component-scan 成功建立並注入 LegacyAS400Dao", dao);
-        Assert.assertTrue(applicationContext.containsBean("legacyAS400Service"));
-        Assert.assertTrue(applicationContext.containsBean("legacyAS400Dao"));
+        Assertions.assertNotNull(applicationContext, "Spring ApplicationContext 必須成功載入");
+        Assertions.assertNotNull(service, "Spring 必須透過 component-scan 成功建立並注入 LegacyAS400Service");
+        Assertions.assertNotNull(dao, "Spring 必須透過 component-scan 成功建立並注入 LegacyAS400Dao");
+        Assertions.assertTrue(applicationContext.containsBean("legacyAS400Service"));
+        Assertions.assertTrue(applicationContext.containsBean("legacyAS400Dao"));
     }
 
     @Test
@@ -55,8 +52,8 @@ public class LegacyAS400ServiceTest {
         Mockito.when(mockRs.getString("customer_name")).thenReturn("Alice");
 
         List<String> customers = service.getActiveCustomers(mockConn);
-        Assert.assertEquals(1, customers.size());
-        Assert.assertEquals("Alice", customers.get(0));
+        Assertions.assertEquals(1, customers.size());
+        Assertions.assertEquals("Alice", customers.get(0));
 
         // 驗證 DAO 有正確關閉 ResultSet 與 Statement，且沒有關閉 Connection
         Mockito.verify(mockRs, Mockito.times(1)).close();
@@ -73,7 +70,7 @@ public class LegacyAS400ServiceTest {
         Mockito.when(mockPs.executeUpdate()).thenReturn(1);
 
         int rows = service.addCustomer(mockConn, "Bob");
-        Assert.assertEquals(1, rows);
+        Assertions.assertEquals(1, rows);
 
         Mockito.verify(mockPs, Mockito.times(1)).setString(1, "Bob");
         Mockito.verify(mockPs, Mockito.times(1)).close();

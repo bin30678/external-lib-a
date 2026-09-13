@@ -3,7 +3,7 @@ package com.external.liba.service;
 import com.external.liba.dao.LegacyAS400Dao;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.sql.Connection;
 import java.util.List;
 
