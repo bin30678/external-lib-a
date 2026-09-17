@@ -1,2 +1,3 @@
 com\external\liba\dao\LegacyAS400Dao.class
+com\external\liba\dao\ExternalJarGenericDao.class
 com\external\liba\service\LegacyAS400Service.class
